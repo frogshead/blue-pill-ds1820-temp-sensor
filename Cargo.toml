@@ -1,7 +1,7 @@
 [package]
-name = "blue-pill-quickstart"
+name = "ds1820"
 version = "0.1.0"
-authors = ["Guillaume Pinot <texitoi@texitoi.eu>"]
+authors = ["Mikko Viitamäki"]
 edition = "2018"
 
 
@@ -18,7 +18,7 @@ m = "0.1.1"
 mfrc522 = "0.2.0"
 serde_derive = "1.0.88"
 nb = "0.1.1"
-onewire = "0.3.9"
+onewire = {git = "https://github.com/kellerkindt/onewire.git"}
 
 
 
