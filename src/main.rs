@@ -17,7 +17,6 @@ extern crate onewire;
 use hal::prelude::*;
 use hal::delay::Delay;
 use hal::stm32;
-//use hal::timer::Timer;
 use rt::{entry, exception, ExceptionFrame};
 
 extern crate cortex_m_semihosting;
@@ -26,7 +25,7 @@ use cortex_m_semihosting::hio;
 use core::fmt::Write;
 
 use onewire::DS18B20;
-use onewire::ds18b20;
+
 
 
 #[entry]
@@ -41,10 +40,7 @@ fn main() -> ! {
 
     // Try a different clock configuration
     let clocks = rcc.cfgr.freeze(&mut flash.acr);
-    // let clocks = rcc.cfgr
-    //     .sysclk(64.mhz())
-    //     .pclk1(32.mhz())
-    //     .freeze(&mut flash.acr);
+
 
     let mut gpioc = dp.GPIOC.split(&mut rcc.apb2);
     let mut gpiob = dp.GPIOB.split(&mut rcc.apb2);
@@ -55,41 +51,22 @@ fn main() -> ! {
     let mut delay = Delay::new(cp.SYST, clocks);
     
     let mut _onewire = onewire::OneWire::new(&mut onewire_pin, false);
-    let mut search = onewire::DeviceSearch::new();
-    while let Some(device) = _onewire.search_next(&mut search ,&mut delay).unwrap(){
-        match device.address[0]{
-            ds18b20::FAMILY_CODE => {
-                let ds18b20 = DS18B20::new(device).unwrap();
-                let resolution = ds18b20.measure_temperature(&mut _onewire, &mut delay).unwrap();
-                delay.delay_ms(resolution.time_ms());
-                loop{
-                  
-                    ds18b20.measure_temperature(&mut _onewire, &mut delay).unwrap();
-                    write!(stdout, "Temperature: {}\n", ds18b20.read_temperature(&mut _onewire, &mut delay).unwrap()).unwrap();
-                }    
-            },
-            _ => {
-                write!(stdout, "Can't read temperature!").unwrap();
-
-            }
-
-
-            }
-        }
+    let mut search = onewire::DeviceSearch::new_for_family(0x28);
+    let device = _onewire.search_next(&mut search ,&mut delay).unwrap();
+    let ds = DS18B20::new(device.unwrap()).unwrap();
 
     
 
     let mut led = gpioc.pc13.into_push_pull_output(&mut gpioc.crh);
-
-
-    //let mut timer = Timer::syst(cp.SYST, 10.hz(), clocks);
-    // Try a different timer (even SYST)
     loop {
-        // block!(timer.wait()).unwrap();
-        // led.set_high();
-        // block!(timer.wait()).unwrap();
-        // led.set_low();
+        delay.delay_ms(500 as u16);
+        ds.measure_temperature(&mut _onewire, &mut delay).unwrap();
+        write!(stdout, "Temperature: {}", ds.read_temperature(&mut _onewire, &mut delay).unwrap()).unwrap();
         led.set_high();
+        delay.delay_ms(500 as u16);
+        
+        led.set_low();
+
     }
 }
 
