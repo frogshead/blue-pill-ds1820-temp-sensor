@@ -11,9 +11,6 @@ extern crate panic_semihosting;
 extern crate stm32f1xx_hal as hal;
 extern crate onewire;
 
-// #[macro_use(block)]
-// extern crate nb;
-
 use hal::prelude::*;
 use hal::delay::Delay;
 use hal::stm32;
@@ -52,7 +49,7 @@ fn main() -> ! {
     
     let mut _onewire = onewire::OneWire::new(&mut onewire_pin, false);
     let mut search = onewire::DeviceSearch::new_for_family(0x28);
-    let device = _onewire.search_next(&mut search ,&mut delay).unwrap();
+    let device =  _onewire.search_next(&mut search ,&mut delay).unwrap();
     let ds = DS18B20::new(device.unwrap()).unwrap();
 
     
@@ -61,7 +58,9 @@ fn main() -> ! {
     loop {
         delay.delay_ms(500 as u16);
         ds.measure_temperature(&mut _onewire, &mut delay).unwrap();
-        write!(stdout, "Temperature: {}", ds.read_temperature(&mut _onewire, &mut delay).unwrap()).unwrap();
+        let temp: u16 = ds.read_temperature(&mut _onewire, &mut delay).unwrap();
+        let t = onewire::ds18b20::split_temp(temp);
+        write!(stdout, "Temperature: {0}.{1} \n" , t.0, t.1).unwrap();
         led.set_high();
         delay.delay_ms(500 as u16);
         
