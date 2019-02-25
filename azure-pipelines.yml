@@ -15,5 +15,7 @@ steps:
   displayName: 'Install rustc'
 - script: |
         export PATH=$PATH:$HOME/.cargo/bin
+  displayName: 'Set environment varialbes'
+- script: |
         cargo build --release
   displayName: 'Build'
