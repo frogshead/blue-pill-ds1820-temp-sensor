@@ -13,12 +13,12 @@ steps:
 - script: |
    curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
   displayName: 'Install rustc'
+
 - script: |
         export PATH=$PATH:$HOME/.cargo/bin
-  displayName: 'Set environment varialbes'
-- script: | 
         rustup target add thumbv7em-none-eabihf
   displayName: 'add arm target'
 - script: |
+        export PATH=$PATH:$HOME/.cargo/bin
         cargo build --release
   displayName: 'Build'
