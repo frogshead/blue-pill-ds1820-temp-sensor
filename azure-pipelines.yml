@@ -16,7 +16,7 @@ steps:
 
 - script: |
         export PATH=$PATH:$HOME/.cargo/bin
-        rustup target add thumbv7em-none-eabihf
+        rustup target add thumbv7m-none-eabi
       
-        cargo build --target=thumbv7em-none-eabi --release
+        cargo build --release
   displayName: 'Build'
