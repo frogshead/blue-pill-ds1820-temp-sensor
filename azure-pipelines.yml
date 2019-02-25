@@ -16,6 +16,9 @@ steps:
 - script: |
         export PATH=$PATH:$HOME/.cargo/bin
   displayName: 'Set environment varialbes'
+- script: | 
+        rustup target add thumbv7em-none-eabihf
+  displayName: 'add arm target'
 - script: |
         cargo build --release
   displayName: 'Build'
