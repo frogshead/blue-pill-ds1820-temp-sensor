@@ -10,10 +10,10 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+   curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
+  displayName: 'Install rustc'
+- script: |
+        export PATH=$PATH:$HOME/.cargo/bin
+        cargo build --release
+  displayName: 'Build'
