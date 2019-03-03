@@ -5,6 +5,11 @@ Spin-off from the [quickstart project](https://github.com/TeXitoi/blue-pill-quic
 
 Quickstart a Rust project for the [blue pill board](https://wiki.stm32duino.com/index.php?title=Blue_Pill), or any STM32F103xx board.
 
+Add target
+```
+rustup target add thumbv7m-none-eabi
+```
+
 ![ST-Link V2 to blue pill](st-link-v2-blue-pill.jpg)
 
 Launch openocd:
